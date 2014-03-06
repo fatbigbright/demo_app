@@ -1,5 +1,6 @@
 SampleApp::Application.routes.draw do
-  get "users/new"
+  resources :users
+  # get "users/new" #-- not need anymore for 'resources :users' includes it
   root to: 'static_pages#home'
   match 'signup', to: 'users#new', via: 'get' #signup_path available after this route defined.
   match '/help', to: 'static_pages#help', via: 'get'
