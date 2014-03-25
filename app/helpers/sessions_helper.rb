@@ -26,4 +26,7 @@ module SessionsHelper
         # ||= stands for only when @current_user is not defined, assign user to it
         @current_user ||= User.find_by(remember_token: remember_token)
     end
+    def current_user?(user)
+        user == current_user
+    end
 end
