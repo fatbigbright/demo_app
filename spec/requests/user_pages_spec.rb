@@ -2,6 +2,34 @@ require 'spec_helper'
 
 describe "UserPages" do
   subject { page }
+  describe "index" do
+      let(:user) { FactoryGirl.create(:user) }
+      before do
+          sign_in user
+          visit users_path
+      end
+
+      it { should have_title('All users') }
+      it { should have_content('All users') }
+
+      describe "pagination" do
+          # if count of user changed, 30 must be changed as well
+          before(:all) { 30.times { FactoryGirl.create(:user) } }
+          after(:all) { User.delete_all }
+
+          it "should list each other" do
+              User.paginate(page: 1).each do |user|
+                  expect(page).to have_selector('li', text: user.name)
+              end
+          end
+      end
+
+      it "should list each other" do
+          User.all.each do |user|
+              expect(page).to have_selector('li', text: user.name)
+          end
+      end
+  end
   describe "profile page" do
       let(:user) { FactoryGirl.create(:user) }
       before { visit user_path(user) }
