@@ -40,13 +40,25 @@ describe "UserPages" do
               end
 
               it { should have_link('delete', href: user_path(User.first)) }
-              it "should be adble to delete another user" do
+              it "should be able to delete another user" do
                   expect do
                       click_link('delete', match: :first)
                   end.to change(User, :count).by(-1)
               end
               it { should_not have_link('delete', href: user_path(admin)) }
+
           end
+      end
+  end
+  describe "delete action" do
+      let(:user) { FactoryGirl.create(:user) }
+      before do
+          sign_in user
+          visit users_path
+      end
+
+      it "should not delete itself" do
+          expect { delete user_path(user) }.not_to change(User, :count)
       end
   end
   describe "profile page" do
@@ -86,7 +98,7 @@ describe "UserPages" do
               fill_in "Name", with: "Example User"
               fill_in "Email", with: "user@example.com"
               fill_in "Password", with: "foobar"
-              fill_in "Confirmation", with: "foobar"
+              fill_in "Confirm Password", with: "foobar"
           end
           it "should create a user" do
               expect { click_button submit }.to change(User, :count).by(1)
